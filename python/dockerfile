@@ -1,0 +1,12 @@
+### Dev environment
+
+FROM python:3.9-alpine3.13 AS dev
+
+WORKDIR /work/
+
+### Debug environment
+
+FROM dev AS debug
+RUN pip install ptvsd
+WORKDIR /work/
+CMD python -m ptvsd --host 0.0.0.0 --port 5678 --wait app.py
