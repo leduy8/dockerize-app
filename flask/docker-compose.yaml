@@ -1,0 +1,44 @@
+version: '0.1'
+
+networks:
+  flask-test:
+    external: true
+
+services:
+  flask-webapp:
+    networks:
+      - flask-test
+    container_name: flask-webapp
+    build: .
+    links:
+      - flask-postgres
+    depends_on:
+      flask-postgres:
+        condition: service_healthy
+    ports:
+      - "50001:50001"
+    restart: always
+    platform: linux/amd64
+    working_dir: /www/flask-test/src/
+    volumes:
+      - /Users/duyle/Desktop/learning/dockerize-app/flask:/www/flask-test/ # <------ Remember to update this
+
+  flask-postgres:
+    networks:
+      - flask-test
+    container_name: flask-postgres
+    image: postgres
+    ports:
+      - "5444:5432"
+    platform: linux/amd64
+    healthcheck:
+      test: ["CMD", "/bin/bash", "-c", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: postgres
+    volumes:
+      - /Users/duyle/Desktop/learning/dockerize-app/flask/pg_data:/var/lib/postgresql/data # <------ Remember to update this
