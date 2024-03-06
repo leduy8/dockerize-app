@@ -10,6 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chmod +x entry.sh
-# CMD ["python", "app.py"]
-ENTRYPOINT ["./entry.sh"]
+CMD ["python", "app.py"]
